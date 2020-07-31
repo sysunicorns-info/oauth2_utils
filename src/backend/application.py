@@ -15,8 +15,6 @@ class Application(object):
             version=VERSION
         )
 
-        self.fastapi.on_event
-
         self.fastapi.add_event_handler("startup", self.handle_event_startup)
         self.fastapi.add_event_handler("shutdown", self.handle_event_shutdown)
 
