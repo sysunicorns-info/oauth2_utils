@@ -8,7 +8,7 @@
             "name": "Backend",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
+            "program": "${workspaceRoot}/src/backend_main.py",
             "cwd": "${workspaceRoot}",
             "args": [],
             "console": "integratedTerminal",
