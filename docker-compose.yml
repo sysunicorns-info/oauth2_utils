@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: oauth2
+      POSTGRES_PASSWORD: oauth2
+      POSTGRES_DB: oauth2
+    ports:
+      - 5432:5432
