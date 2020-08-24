@@ -1,9 +1,13 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from starlette.types import Receive, Scope, Send
 
-from .api import api_router, API_ROUTER_PREFIX
+from .config import Config, ConfigFactory
 from .db import Database
-from .config import Config
+from .container import ApplicationContainer, application_container_proxy
+from .service import service_container_proxy
+# Load After Initialization of all Container
+from .api import api_router, API_ROUTER_PREFIX
 
 VERSION_MAJOR=0
 VERSION_MINOR=0
@@ -12,31 +16,26 @@ NAME="OAuth2 - Backend"
 
 class Application(FastAPI):
 
-    database: Database = None
     config: Config = None
     fastapi: FastAPI = None
 
     def __init__(self):
-        self.config = Config(
-            db_host="127.0.0.1",
-            db_user="oauth2",
-            db_pwd="oauth2",
-            db_name="oauth2"
-        )
+        self.config = ConfigFactory().get_config()
 
-        self.database = Database(
-            dsn=Database.dsn(
-                host=self.config.db_host,
-                user=self.config.db_user,
-                pwd=self.config.db_pwd,
-                name=self.config.db_name
-            ), 
-            application_name=NAME
-        )
+        application_container_proxy.factory(config=self.config)
+        service_container_proxy.factory()
 
         self.fastapi = FastAPI(
             title=NAME,
             version=VERSION
+        )
+
+        self.fastapi.add_middleware(
+            CORSMiddleware,
+            allow_origins=self.config.origins,
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
         )
 
         self.fastapi.add_event_handler("startup", self.handle_event_startup)
@@ -49,8 +48,8 @@ class Application(FastAPI):
 
     async def handle_event_startup(self):
         print("startup")
-        await self.database.init_pool();
+        await application_container_proxy().database().init_pool();
 
     async def handle_event_shutdown(self):
         print("shutdown")
-        await self.database.close_pool();
+        await application_container_proxy().database().close_pool();

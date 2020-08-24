@@ -3,8 +3,6 @@ from aiopg.sa import create_engine, Engine
 import asyncio
 from contextlib import AbstractAsyncContextManager
 
-database=None
-
 class Database():
 
     engine: Engine = None
@@ -22,10 +20,6 @@ class Database():
         self._application_name = application_name
         self._pool_minsize = pool_minsize
         self._pool_maxsize = pool_maxsize
-
-        global database
-        database = self
-        print()
 
     @staticmethod
     def dsn(host: str, user: str, pwd: str, name: str):
@@ -49,7 +43,3 @@ class Database():
 
     def __del__(self):
         print("db del")
-
-def get_database() -> Database:
-    global database
-    return database

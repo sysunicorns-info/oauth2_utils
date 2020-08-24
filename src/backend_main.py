@@ -1,8 +1,16 @@
 import uvicorn
 
 from backend.application import Application
+from backend.config import Config, ConfigFactory
 
-application = Application()
+
 
 if __name__ == "__main__":
-    uvicorn.run("backend_main:application", host="127.0.0.1", port=5000, log_level="debug")
+    _config = ConfigFactory().get_config()
+    uvicorn.run("backend_main:application", 
+        host=_config.server_host, 
+        port=_config.server_port, 
+        log_level=_config.server_log_level_str
+    )
+else:
+    application = Application()
