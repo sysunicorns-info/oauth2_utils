@@ -9,6 +9,19 @@
         "**/*.pyc": {"when": "$(basename).py"}, 
         "**/__pycache__": true
     },
-    "python.analysis.memory.keepLibraryAst": true,
-    "python.analysis.memory.keepLibraryLocalVariables": true
+    "python.terminal.activateEnvironment":true,
+    "terminal.integrated.env.linux": {
+        "PYTHONPATH": "${workspaceFolder}/src:${PYTHONPATH}",
+        "PATH": "${workspaceFolder}/src:${PATH}"
+    },
+    "python.testing.pytestPath": "pytest",
+    "python.envFile": "${workspaceFolder}/project.env",
+    "python.analysis.memory.keepLibraryLocalVariables": true,
+    "python.testing.pytestArgs": [
+        "test",
+        "--import-mode=append"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.pytestEnabled": true
 }

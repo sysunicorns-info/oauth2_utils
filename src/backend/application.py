@@ -27,7 +27,8 @@ class Application(FastAPI):
 
         self.fastapi = FastAPI(
             title=NAME,
-            version=VERSION
+            version=VERSION,
+            debug=True
         )
 
         self.fastapi.add_middleware(

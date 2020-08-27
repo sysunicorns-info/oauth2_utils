@@ -24,6 +24,7 @@ class ApplicationContainerProxy():
                 application_name=config.application_name
             )
         )
+        return self.application_container
 
     def set(self, application_container: ApplicationContainer):
         self.application_container = application_container
