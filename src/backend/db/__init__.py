@@ -1,5 +1,6 @@
 import aiopg
 import logging
+import psycopg2
 from aiopg.sa import create_engine, Engine
 import asyncio
 from contextlib import AbstractAsyncContextManager
@@ -39,9 +40,14 @@ class Database():
                 dsn=self._dns, 
                 minsize=self._pool_minsize, maxsize=self._pool_maxsize
             )
+        except psycopg2.Error as e:
+            logger.error("Exception occur when Instanciate Database Engine")
+            logger.exception(e, exc_info=False)
+            self.engine = None
+            self.health = False
         except Exception as e:
             logger.error("Exception occur when Instanciate Database Engine")
-            logger.exception(e)
+            logger.exception(e, exc_info=True)
             self.engine = None
             self.health = False
         else:
